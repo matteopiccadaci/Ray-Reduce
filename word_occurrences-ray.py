@@ -35,7 +35,7 @@ def chunk_mapper(chunk):
 
 @ray.remote
 def routine(data_chunks):
-    #data_chunks_gen = (y for y in data_chunks)
+    data_chunks_gen = (y for y in data_chunks)
     #pool = Pool(8)
     mapped = map(chunk_mapper, data_chunks_gen)
     reduced = reduce(reducer, mapped)
@@ -52,11 +52,12 @@ with open('../grande.txt', "r") as dataf:
     data=dataf.read()
 
 data=data.split(' ')
-data_chunks = batched(data,8)
+data_chunks = batched(data,128)
 data_chunks_gen = list(y for y in data_chunks)
-data_chunks_obj = ray.put(data_chunks_gen)
+cluster=10
+#data_chunks_obj = ray.put(data_chunks_gen)
 
-futures = [routine.remote(data_chunks_obj)]
+futures = [routine.remote(ray.put(data_chunks_gen[int(((len(data_chunks_gen)/cluster)*(i-1))):int(((len(data_chunks_gen)/cluster)*i))-1])) for i in range (1, cluster+1)]
 
 print(ray.get(futures))
 print (time.time()-start)

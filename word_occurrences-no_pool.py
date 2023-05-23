@@ -15,7 +15,7 @@ parser.add_argument("-fn","--filename", help="The file you want to count the occ
 args = parser.parse_args()
 
 def clean_word(word):
-    return word.translate(str.maketrans('', '', string.punctuation))
+    return word.translate(str.maketrans('', '', string.punctuation)).lower()
 
 def matches_word(word):
     if word == (args.word).lower():

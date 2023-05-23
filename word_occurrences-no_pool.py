@@ -6,12 +6,19 @@ import re
 from more_itertools import batched
 import string
 import time
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-w","--word", help="The word you want to count the occurrences of")
+parser.add_argument("-fn","--filename", help="The file you want to count the occurrences of the word in")
+args = parser.parse_args()
 
 def clean_word(word):
     return word.translate(str.maketrans('', '', string.punctuation))
 
 def matches_word(word):
-    if word == 'ut':
+    if word == (args.word).lower():
         return word
 
 def mapper(text):
@@ -30,8 +37,8 @@ def chunk_mapper(chunk):
     return reduced
 
 start=time.time()
-#pool = Pool(8)
-with open('../grande.txt', "r") as dataf:
+
+with open(args.filename, "r") as dataf:
     data=dataf.read()
 
 data=data.split(' ')

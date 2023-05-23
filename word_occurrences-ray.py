@@ -16,7 +16,7 @@ args = parser.parse_args()
 
 
 def clean_word(word):
-    return word.translate(str.maketrans('', '', string.punctuation))
+    return word.translate(str.maketrans('', '', string.punctuation)).lower()
 
 def matches_word(word):
     if word == (args.word).lower():
@@ -59,7 +59,7 @@ with open(args.filename, "r") as dataf:
     data=dataf.read()
 
 data=data.split(' ')
-cluster=args.devices
+cluster=int(args.devices)
 data_chunks = batched(data, cluster)
 data_chunks_gen = list(y for y in data_chunks)
 #data_chunks_obj = ray.put(data_chunks_gen)
@@ -68,7 +68,7 @@ futures = [routine.remote(ray.put(data_chunks_gen[int(((len(data_chunks_gen)/clu
 
 ut=0
 for i in range (0, len(ray.get(futures))):
-    ut=ut+int(ray.get(futures)[i]['ut'])
+    ut=ut+int(ray.get(futures)[i][(args.word).lower()])
 
-print("'ut': ", ut)
+print(f"'{args.word}': ", ut)
 print (time.time()-start)

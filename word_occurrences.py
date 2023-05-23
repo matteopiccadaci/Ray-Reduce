@@ -29,18 +29,18 @@ def chunk_mapper(chunk):
     reduced = reduce(reducer, mapped)
     return reduced
 
+if __name__ == '__main__':
+    start=time.time()
 
-start=time.time()
+    pool = Pool(8)
+    with open('../grande.txt', "r") as dataf:
+        data=dataf.read()
 
-pool = Pool(8)
-with open('../grande.txt', "r") as dataf:
-    data=dataf.read()
+    data=data.split(' ')
+    data_chunks = batched(data,multiprocessing.cpu_count())
+    mapped = pool.map(chunk_mapper, data_chunks)
 
-data=data.split(' ')
-data_chunks = batched(data,multiprocessing.cpu_count())
-mapped = pool.map(chunk_mapper, data_chunks)
+    reduced = reduce(reducer, mapped)
 
-reduced = reduce(reducer, mapped)
-
-print (reduced)
-print (time.time()-start)
+    print (reduced)
+    print (time.time()-start)

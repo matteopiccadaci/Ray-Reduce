@@ -1,20 +1,25 @@
-import multiprocessing
 from multiprocessing import Pool
 from functools import reduce
 from collections import Counter
-import re
 from more_itertools import batched
 import string
 import time
 import ray
-from ray.util import inspect_serializability
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-w","--word", help="The word you want to count the occurrences of")
+parser.add_argument("-fn","--filename", help="The file you want to count the occurrences of the word in")
+parser.add_argument("-d","--devices", help="The number of devices into your ray cluster")
+args = parser.parse_args()
 
 
 def clean_word(word):
     return word.translate(str.maketrans('', '', string.punctuation))
 
 def matches_word(word):
-    if word == 'ut':
+    if word == (args.word).lower():
         return word
 
 def mapper(text):
@@ -46,13 +51,15 @@ def routine(data_chunks):
 
 ray.init()
 
+#input("Dopo aver connesso tutti i dispositivi, premere un tasto per continuare...")
+
 start=time.time()
 
-with open('../grande.txt', "r") as dataf:
+with open(args.filename, "r") as dataf:
     data=dataf.read()
 
 data=data.split(' ')
-cluster=8
+cluster=args.devices
 data_chunks = batched(data, cluster)
 data_chunks_gen = list(y for y in data_chunks)
 #data_chunks_obj = ray.put(data_chunks_gen)

@@ -18,7 +18,7 @@ MapReduce è un sistema di elaborazione batch e non è adatto per l'analisi inte
 Per realizzare il sistema distribuito, si è deciso di utilizzare il framework open source Ray, che utlizza il linguaggio Python per scalare calcoli di vario tipo, come ad esempio molti di modelli di AI. La sua peculiarità vincente è proprio il fatto di utilizzare Python: ciò lo rende fruibile su dispositivi di svariate prestazioni e architetture. Ray si pone come layer trasparente di distribuzione, in maniera che lo sviluppatore non si debba preoccupare di coordinare i dispositivi del cluster e distribuire in maniera equa il carico di lavoro. Esso gestisce autonomamente orchestrazione, scheduling e autoscaling e ha ottime politiche di fault tolerance.
 
 <p align="center">
-  <img src="docs/ray.png">
+  <img src="docs/ray.jpg">
 </p>
 
 # Implementazioni
